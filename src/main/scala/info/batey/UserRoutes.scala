@@ -37,7 +37,7 @@ class UserRoutes(system: ActorSystem[_], userRegistryActor: ActorRef[UserCommand
               entity(as[User]) { user =>
                 val userCreated: Future[ActionPerformed] = userRegistryActor.ask(replyTo => CreateUser(user, replyTo))
                 onSuccess(userCreated) { performed =>
-                  log.info("Created user [{}]: {}", user.name, performed.description)
+                  log.info(s"Created user [${user.name}]: ${performed.description}")
                   complete((StatusCodes.Created, performed))
                 }
               }
@@ -54,7 +54,7 @@ class UserRoutes(system: ActorSystem[_], userRegistryActor: ActorRef[UserCommand
             delete {
               val userDeleted: Future[ActionPerformed] = userRegistryActor.ask(replyTo => DeleteUser(name, replyTo))
               onSuccess(userDeleted) { performed =>
-                log.info("Deleted user [{}]: {}", name, performed.description)
+                log.info(s"Deleted user [${name}]: ${performed.description}")
                 complete((StatusCodes.OK, performed))
               }
             })
